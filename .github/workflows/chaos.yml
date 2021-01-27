@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: Creating kind cluster
         uses: helm/kind-action@v1.0.0-rc.1
-      - name: Install KubeSphere
+      - name: Install busybox
         run: |
           kubectl cluster-info
           kubectl get nodes
@@ -22,14 +22,14 @@ jobs:
           export IP=`docker inspect ${ID} |grep IPAddress | sed -n '2p'| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
           sudo apt-get install socat
           socat TCP4-LISTEN:30880,reuseaddr,fork TCP4:${IP}:30880 &
-      - uses: shaowenchen/debugger-action@v2
-        name: debugger
-        timeout-minutes: 15
-        continue-on-error: true
-        with:
-          ngrok_token: ${{ secrets.NGROK_TOKEN }}
-          ngrok_addr_1: 30880
-          ngrok_proto_1: http
+      #- uses: shaowenchen/debugger-action@v2
+      #  name: debugger
+      #  timeout-minutes: 15
+      #  continue-on-error: true
+      #  with:
+      #    ngrok_token: ${{ secrets.NGROK_TOKEN }}
+      #    ngrok_addr_1: 30880
+      #    ngrok_proto_1: http
       - name: Run chaos mesh action
         uses: chaos-mesh/chaos-mesh-action@xiang/refine_script
         # base64 chaos.yaml
