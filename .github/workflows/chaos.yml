@@ -1,0 +1,41 @@
+name: chaos
+on:
+  workflow_dispatch:
+
+jobs:
+  chaos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Creating kind cluster
+        uses: helm/kind-action@v1.0.0-rc.1
+      - name: Install KubeSphere
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get pods -n kube-system
+          helm version
+          kubectl version
+          kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
+      - name: Expose Port for Kind
+        run: |
+          export ID=`docker ps | awk '{print $1}' | sed -n '2p'`
+          export IP=`docker inspect ${ID} |grep IPAddress | sed -n '2p'| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+          sudo apt-get install socat
+          socat TCP4-LISTEN:30880,reuseaddr,fork TCP4:${IP}:30880 &
+      - uses: shaowenchen/debugger-action@v2
+        name: debugger
+        timeout-minutes: 15
+        continue-on-error: true
+        with:
+          ngrok_token: ${{ secrets.NGROK_TOKEN }}
+          ngrok_addr_1: 30880
+          ngrok_proto_1: http
+      - name: Run chaos mesh action
+        uses: chaos-mesh/chaos-mesh-action@xiang/refine_script
+        # base64 chaos.yaml
+        env:
+           CFG_BASE64: ${{ secrets.CFG_BASE64 }}
+      - name: Verify
+        run: |
+           echo "do some verify"
+           kubectl exec busybox-0 -it -n busybox -- ping -c 30 busybox-1.busybox.busybox.svc     
