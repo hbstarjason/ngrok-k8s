@@ -20,12 +20,12 @@ jobs:
           helm repo update
           kubectl version
           kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
-      - name: Expose Port for Kind
-        run: |
-          export ID=`docker ps | awk '{print $1}' | sed -n '2p'`
-          export IP=`docker inspect ${ID} |grep IPAddress | sed -n '2p'| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
-          sudo apt-get install socat
-          socat TCP4-LISTEN:30880,reuseaddr,fork TCP4:${IP}:30880 &
+      #- name: Expose Port for Kind
+      #  run: |
+      #    export ID=`docker ps | awk '{print $1}' | sed -n '2p'`
+      #    export IP=`docker inspect ${ID} |grep IPAddress | sed -n '2p'| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+      #    sudo apt-get install socat
+      #    socat TCP4-LISTEN:30880,reuseaddr,fork TCP4:${IP}:30880 &
       #- uses: shaowenchen/debugger-action@v2
       #  name: debugger
       #  timeout-minutes: 15
