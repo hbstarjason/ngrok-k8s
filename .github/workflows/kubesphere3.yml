@@ -1,9 +1,9 @@
-name: ngrok-kind-v2
+name: kubesphere3
 on:
   workflow_dispatch:
 
 jobs:
-  example-ngrok-kind-v2:
+  kubesphere3:
     runs-on: ubuntu-latest
     steps:
       - name: Creating kind cluster
