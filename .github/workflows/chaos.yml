@@ -19,7 +19,6 @@ jobs:
           helm repo update
           kubectl version
           curl -sSL https://mirrors.chaos-mesh.org/v1.1.1/crd.yaml | kubectl apply -f -
-          kubectl create ns chaos-testing
           helm install chaos-mesh chaos-mesh/chaos-mesh --namespace=chaos-testing
           kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
       #- name: Expose Port for Kind
