@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Creating kind cluster
-        uses: helm/kind-action@v1.0.0-rc.1
+        uses: helm/kind-action@v1.1.0
       - name: Install busybox
         run: |
           kubectl cluster-info
@@ -18,6 +18,9 @@ jobs:
           helm repo add chaos-mesh https://charts.chaos-mesh.org
           helm repo update
           kubectl version
+          curl -sSL https://mirrors.chaos-mesh.org/v1.1.1/crd.yaml | kubectl apply -f -
+          kubectl create ns chaos-testing
+          helm install chaos-mesh chaos-mesh/chaos-mesh --namespace=chaos-testing
           kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
       #- name: Expose Port for Kind
       #  run: |
