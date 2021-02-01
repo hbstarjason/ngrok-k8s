@@ -15,7 +15,6 @@ jobs:
           kubectl get pods -n kube-system
           helm version
           helm repo add stable http://mirror.azure.cn/kubernetes/charts
-          helm repo up
           helm repo add chaos-mesh https://charts.chaos-mesh.org
           helm repo update
           kubectl version
