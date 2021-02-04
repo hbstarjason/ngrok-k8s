@@ -8,38 +8,36 @@ jobs:
     steps:
       - name: Creating kind cluster
         uses: helm/kind-action@v1.1.0
-      - name: Install busybox
+
+      - name: Print cluster information
         run: |
-          kubectl cluster-info
-          kubectl get nodes
-          kubectl get pods -n kube-system
-          helm version
-          helm repo add stable http://mirror.azure.cn/kubernetes/charts
-          helm repo add chaos-mesh https://charts.chaos-mesh.org
-          helm repo update
-          kubectl version
-          curl -sSL https://mirrors.chaos-mesh.org/v1.1.1/crd.yaml | kubectl apply -f -
-          helm install chaos-mesh chaos-mesh/chaos-mesh --namespace=chaos-testing
-          kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
-      #- name: Expose Port for Kind
-      #  run: |
-      #    export ID=`docker ps | awk '{print $1}' | sed -n '2p'`
-      #    export IP=`docker inspect ${ID} |grep IPAddress | sed -n '2p'| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
-      #    sudo apt-get install socat
-      #    socat TCP4-LISTEN:30880,reuseaddr,fork TCP4:${IP}:30880 &
-      #- uses: shaowenchen/debugger-action@v2
-      #  name: debugger
-      #  timeout-minutes: 15
-      #  continue-on-error: true
-      #  with:
-      #    ngrok_token: ${{ secrets.NGROK_TOKEN }}
-      #    ngrok_addr_1: 30880
-      #    ngrok_proto_1: http
+        kubectl config view
+        kubectl cluster-info
+        kubectl get nodes
+        kubectl get pods -n kube-system
+        helm version
+        kubectl version
+
+      - uses: actions/checkout@v2
+
+    - name: Deploy an application
+      run: |
+        kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
+        
+    - name: Check pods
+      run: |
+        kubectl get pods -n chaos-testing
+        sleep 5
+        kubectl get pods -n busybox      
+
+
       - name: Run chaos mesh action
-        uses: chaos-mesh/chaos-mesh-action@xiang/refine_script
+        uses: chaos-mesh/chaos-mesh-action@master
         # base64 chaos.yaml
         env:
            CFG_BASE64: ${{ secrets.CFG_BASE64 }}
+           CHAOS_MESH_VERSION: v1.0.0
+
       - name: Verify
         run: |
            echo "do some verify"
