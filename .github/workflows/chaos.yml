@@ -11,24 +11,24 @@ jobs:
 
       - name: Print cluster information
         run: |
-        kubectl config view
-        kubectl cluster-info
-        kubectl get nodes
-        kubectl get pods -n kube-system
-        helm version
-        kubectl version
+          kubectl config view
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get pods -n kube-system
+          helm version
+          kubectl version
 
       - uses: actions/checkout@v2
 
-    - name: Deploy an application
-      run: |
-        kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
+      - name: Deploy an application
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/chaos-mesh/apps/master/ping/busybox-statefulset.yaml
         
-    - name: Check pods
-      run: |
-        kubectl get pods -n chaos-testing
-        sleep 5
-        kubectl get pods -n busybox      
+      - name: Check pods
+        run: |
+          kubectl get pods -n chaos-testing
+          sleep 5
+          kubectl get pods -n busybox      
 
 
       - name: Run chaos mesh action
