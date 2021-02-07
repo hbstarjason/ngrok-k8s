@@ -6,8 +6,14 @@ jobs:
   rainbond:
     runs-on: ubuntu-latest
     steps:
-      - name: Creating kind cluster
-        uses: helm/kind-action@v1.1.0
+      #- name: Creating kind cluster
+      #  uses: helm/kind-action@v1.1.0
+      - name: Creating k3s
+        run: |
+          #curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--docker --disable traefik" sh -
+          curl -sfL https://get.k3s.io | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--docker --disable traefik" sh -
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          kubectl get pods --all-namespaces
       - name: Install rainbond
         run: |
           kubectl cluster-info
