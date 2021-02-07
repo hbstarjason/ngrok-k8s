@@ -19,6 +19,9 @@ jobs:
           kubectl cluster-info
           kubectl get nodes
           kubectl get pods -n kube-system
+          HELMVERSION=helm-v3.2.4
+          curl -sSL https://get.helm.sh/${HELMVERSION}-linux-amd64.tar.gz | \
+            sudo tar xz -C /usr/local/bin --strip-components=1 linux-amd64/helm 
           helm version
           kubectl version
           kubectl create ns rbd-system
