@@ -22,6 +22,7 @@ jobs:
                --version 1.1.1
           kubectl get pod -n rbd-system
           sleep 15
+          echo $(kubectl get po rainbond-operator-0 -n rbd-system -o jsonpath="{..hostIP}")
       - name: Expose Port for Kind
         run: |
           export ID=`docker ps | awk '{print $1}' | sed -n '2p'`
