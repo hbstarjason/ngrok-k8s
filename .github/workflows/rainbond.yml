@@ -16,7 +16,8 @@ jobs:
           #export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           #sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config && sudo chown $USER: ~/.kube/config && unset KUBECONFIG
           kubectl version
-          chmod -R 777 /etc/rancher/k3s/k3s.yaml
+          sudo chmod -R 777 /etc/rancher/k3s/k3s.yaml
+          #sudo chmod o+rw /etc/rancher/k3s/k3s.yaml 
           kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml get pods --all-namespaces
           kubectl cluster-info
           kubectl get pods --all-namespaces
