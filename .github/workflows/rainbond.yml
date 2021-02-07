@@ -14,6 +14,7 @@ jobs:
           curl -sfL https://get.k3s.io | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--docker --disable traefik" K3S_KUBECONFIG_MODE="644" sh -
           ls /etc/rancher/k3s/
           #export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          mkdir /home/runner/.kube
           sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config && sudo chown $USER: ~/.kube/config && unset KUBECONFIG
           kubectl version
           #sudo chmod -R 777 /etc/rancher/k3s/k3s.yaml
