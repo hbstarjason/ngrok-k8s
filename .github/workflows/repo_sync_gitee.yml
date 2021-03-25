@@ -1,6 +1,5 @@
 
-
-name: Gitee repos mirror periodic job
+name: repo_sync_gitee
 on:
   workflow_dispatch:
   #schedule:
