@@ -1,3 +1,5 @@
+### https://github.com/AliyunContainerService/k8s-for-docker-desktop/blob/v1.19.7/load_images.sh
+
 #!/bin/bash
 
 file="images.properties"
